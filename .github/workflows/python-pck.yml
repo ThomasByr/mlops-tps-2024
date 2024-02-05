@@ -26,9 +26,9 @@ jobs:
         run: |
           # install dev dependencies
           pip install poetry
-          poetry install --no-root
-      - name: hatch run dev:check
+          poetry install --with dev --no-root
+      - name: Run tests
         run: |
-          python -m pytest
-          # python -m ruff .
-          python -m black --check src
+          poetry run pytest
+          poetry run black --check .
+          # poetry run ruff .
