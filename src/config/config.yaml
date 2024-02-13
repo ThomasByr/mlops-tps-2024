@@ -2,10 +2,10 @@ project:
   name: mlops-hardshat
 
 model:
-  key: value
+  epochs: 10
 
 evaluation:
   key: value
 
 pipeline:
-  name: datalake
+  name: experiment

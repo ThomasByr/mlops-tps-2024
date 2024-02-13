@@ -115,9 +115,12 @@ class Dataset:
         try:
             yolo_categories = [self.annotations_path, self.images_path]
 
-            if os.path.isdir(
-                os.path.join(dataset_path, yolo_categories[0])
-            ) or os.path.isdir(os.path.join(dataset_path, yolo_categories[1])):
+            # if os.path.isdir(
+            #     os.path.join(dataset_path, yolo_categories[0])
+            # ) or os.path.isdir(os.path.join(dataset_path, yolo_categories[1])):
+            #     return
+            # check if the yolo_yaml file exists
+            if os.path.isfile(os.path.join(dataset_path, DATASET_YOLO_CONFIG_NAME)):
                 return
 
             for category in yolo_categories:
@@ -197,8 +200,8 @@ class Dataset:
             list: A list of strings, each representing an object in YOLO annotation format.
         """
         yolo_format = []
-        for i in range(len(json_data["label"])):
-            label = json_data["label"][i]
+        for i in range(len(json_data["category"])):
+            label = json_data["category"][i]
             bbox = json_data["bbox"][i]
             x_center, y_center, width, height = bbox
             yolo_format.append(f"{label} {x_center} {y_center} {width} {height}")
@@ -232,7 +235,7 @@ class Dataset:
 
             os.remove(json_path)
         except Exception as e:
-            raise Exception(f"Error processing {json_path}") from e
+            raise Exception(f"Error processing {json_path}, {img_path}") from e
 
     def _convert_annotations_to_yolo_format(self, dataset_path) -> None:
         """
@@ -251,11 +254,15 @@ class Dataset:
         threads = []
         for root, _, files in os.walk(dataset_path):
             for file in files:
+                if file == "label_map.json":
+                    continue
                 if file.endswith(".json"):
                     json_path = os.path.join(root, file)
-                    img_path = json_path.replace("labels", "images").replace(
-                        ".json", ".png"
-                    )
+                    img_path = json_path.replace(
+                        self.annotations_path, self.images_path
+                    ).replace(".json", ".png")
+                    # print(json_path, img_path)
+                    # return
                     thread = threading.Thread(
                         target=self._process_json_file, args=(json_path, img_path)
                     )
