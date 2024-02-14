@@ -48,13 +48,17 @@ def generate_train_test_val_splits(dataset: Dataset, dataset_path: str) -> None:
         )
 
     # split the files into the directories according to the distribution weights
-    for filename_json in os.listdir(os.path.join(dataset_path, dataset.annotations_path)):
+    for filename_json in os.listdir(
+        os.path.join(dataset_path, dataset.annotations_path)
+    ):
         split = dataset.get_next_split()
         filename_img = filename_json.replace(
             dataset.annotations_path, dataset.images_path
-            ).replace(".json", ".png")
+        ).replace(".json", ".png")
         old_file = os.path.join(dataset_path, dataset.annotations_path, filename_json)
-        new_file = os.path.join(dataset_path, split, dataset.annotations_path, filename_json)
+        new_file = os.path.join(
+            dataset_path, split, dataset.annotations_path, filename_json
+        )
         shutil.move(old_file, new_file)
         old_file = os.path.join(dataset_path, dataset.images_path, filename_img)
         new_file = os.path.join(dataset_path, split, dataset.images_path, filename_img)
@@ -75,4 +79,3 @@ def dataset_to_yolo_converter(dataset: Dataset, dataset_path: str) -> None:
         dataset_path (str): The path where dataset has been downloaded.
     """
     dataset.to_yolo_format(dataset_path)
-    
