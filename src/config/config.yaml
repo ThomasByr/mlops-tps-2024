@@ -2,7 +2,9 @@ project:
   name: mlops-hardhat
 
 model:
-  epochs: 10
+  epochs: 1
+  batch_size : 32
+  imgsz : 256
 
 evaluation:
   key: value

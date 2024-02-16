@@ -1,5 +1,6 @@
 import os
 
+from ultralytics import YOLO
 from zenml import step
 
 from src.config.settings import (
@@ -45,6 +46,28 @@ def model_trainer(
     Returns:
         The path of the trained model.
     """
+    # Load the pre-trained weights
+    model = YOLO()  # pre_trained_weights_path)
+
     # Train the model
-    trained_model_path = "trained_model_path"
+    params = pipeline_config["model"]
+    data_path = os.path.join(dataset_path, "dataset.yaml")
+    results = model.train(
+        data=data_path,
+        project=model_dir_path,
+        epochs=params["epochs"],
+        batch=params["batch_size"],
+        imgsz=params["imgsz"],
+    )
+
+    # Model name
+    number_of_trained_models = len(os.listdir(model_dir_path))
+
+    # Save the trained model
+    trained_model_path = os.path.join(
+        model_dir_path, f"yolo_model_v{number_of_trained_models}"
+    )
+
+    model.save(trained_model_path)
+
     return trained_model_path
