@@ -55,6 +55,14 @@ def gitflow_experiment_pipeline(cfg: str) -> None:
     )
 
     # Evaluate the model
-    # test_metrics_result = model_evaluator(
-    #     ...
-    # )
+    test_metrics_result = model_evaluator(
+        trained_model_path=trained_model_path,
+        pipeline_config=pipeline_config,
+    )
+
+    # Validation
+    decision = model_validation(
+        metrics=test_metrics_result,
+        pipeline_config=pipeline_config,
+    )
+    print(f"{decision = }")
