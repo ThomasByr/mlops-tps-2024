@@ -26,7 +26,7 @@
             "cwd": "${workspaceFolder}",
             "args": [
                 "pipeline.name=experiment",
-                "model.epochs=2"
+                "model.epochs=10"
             ]
         }
     ]
