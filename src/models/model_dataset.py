@@ -280,3 +280,11 @@ class Dataset:
 
         for thread in threads:
             thread.join()
+
+        try:
+            os.rename(
+                os.path.join(dataset_path, "annotations"),
+                os.path.join(dataset_path, "labels"),
+            )
+        except FileNotFoundError:
+            pass
