@@ -202,7 +202,7 @@ class Dataset:
         yolo_format = []
         for i in range(len(json_data["category"])):
             label = json_data["category"][i]
-            if label == "person":
+            if label not in self.label_map.values():
                 continue
             label = list(self.label_map.keys())[
                 list(self.label_map.values()).index(label)
