@@ -50,12 +50,8 @@ def gitflow_experiment_pipeline(cfg: str) -> None:
 
     # comet_ml.init()
 
-    # TODO temporaire pour test eval
-    # trained_model_path = model_trainer(
-    #     model_dir_path, dataset_path, pre_trained_weights_path, pipeline_config
-    # )
-    trained_model_path = os.path.join(
-        model_dir_path, f"yolo_model_v6", "weights", "best.pt"
+    trained_model_path = model_trainer(
+        model_dir_path, dataset_path, pre_trained_weights_path, pipeline_config
     )
 
     # Evaluate the model

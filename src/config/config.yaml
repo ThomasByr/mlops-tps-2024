@@ -6,15 +6,16 @@ model:
   batch_size : 32
   imgsz : 256
 
-evaluation:
-  type:
-    - IoU
-    - test
+# evaluation:
+#   type:
+#     - IoU
 
 validation:
   threshold:
-    IoU: 0.8
-    test: 0.2
+    precision: 0.5
+    recall: 0.5
+    map50: 0.5
+    map50_95: 0.5
 
 pipeline:
   name: experiment

@@ -22,11 +22,10 @@ def model_validation(
     found_bad_metric = False
     for metric_type, value in metrics.items():
         thresh = thresholds.get(metric_type, 0)
-        print(f"metric : {metric_type}")
-        print(f"  value : {value}")
-        print(f"  threshold : {thresh}")
-        print(f"  =>", "good" if value >= thresh else "bad")
+        # print(f"metric : {metric_type}")
+        # print(f"  value : {value}")
+        # print(f"  threshold : {thresh}")
+        # print(f"  =>", "good" if value >= thresh else "bad")
         if value < thresh:
             found_bad_metric = True
-    print(f"decision = {not found_bad_metric}")
     return not found_bad_metric

@@ -1,6 +1,8 @@
 # imports
 from ultralytics import YOLO
+from ultralytics.models.yolo.detect.val import DetectionValidator
 from zenml import step
+import os
 
 
 @step
@@ -19,23 +21,28 @@ def model_evaluator(
     Returns:
         dictionnary of model metrics
     """
-    metrics = pipeline_config.get("evaluation", None)
-    if metrics is None:
-        raise KeyError('No "evaluation" section in pipeline parameters')
+    params = pipeline_config.get("model", {})
 
-    model = YOLO()
-    model.load(trained_model_path)
+    data_path = os.path.join(dataset_path, "dataset.yaml")
 
-    val = model.val(
-        data=dataset_path,
+    args = dict(
+        model=trained_model_path,
+        data=data_path,
+        split="test",
+        mode="val",
+        batch=params["batch_size"],
+        imgsz=params["imgsz"],
+        iou=0.6,
     )
-    print(val)
+    validator = DetectionValidator(args=args)
+    validator.training = False
+    validator()
 
-    results = {}
-    types = metrics.get("type", [])
-    if "IoU" in types:
-        results["IoU"] = 0.5
-    if "test" in types:
-        results["test"] = 0.9
+    tmp = validator.get_stats()
 
-    return results
+    return dict(
+        precision=tmp.get("metrics/precision(B)", -1),
+        recall=tmp.get("metrics/recall(B)", -1),
+        map50=tmp.get("metrics/mAP50(B)", -1),
+        map50_95=tmp.get("metrics/mAP50-95(B)", -1),
+    )
