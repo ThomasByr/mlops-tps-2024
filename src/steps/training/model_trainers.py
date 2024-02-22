@@ -52,22 +52,22 @@ def model_trainer(
     # Train the model
     params = pipeline_config["model"]
     data_path = os.path.join(dataset_path, "dataset.yaml")
-    results = model.train(
+
+    # Model name
+    number_of_trained_models = len(os.listdir(model_dir_path))
+
+    model.train(
         data=data_path,
         project=model_dir_path,
+        name=f"yolo_model_v{number_of_trained_models}",  # specify the name of the experiment
         epochs=params["epochs"],
         batch=params["batch_size"],
         imgsz=params["imgsz"],
     )
 
-    # Model name
-    number_of_trained_models = len(os.listdir(model_dir_path))
-
     # Save the trained model
     trained_model_path = os.path.join(
-        model_dir_path, f"yolo_model_v{number_of_trained_models}"
+        model_dir_path, f"yolo_model_v{number_of_trained_models}", "weights", "best.pt"
     )
-
-    model.save(trained_model_path)
 
     return trained_model_path

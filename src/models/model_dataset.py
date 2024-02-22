@@ -202,8 +202,17 @@ class Dataset:
         yolo_format = []
         for i in range(len(json_data["category"])):
             label = json_data["category"][i]
+            if label == "person":
+                continue
+            label = list(self.label_map.keys())[
+                list(self.label_map.values()).index(label)
+            ]
             bbox = json_data["bbox"][i]
             x_center, y_center, width, height = bbox
+            x_center /= img_width
+            width /= img_width
+            y_center /= img_height
+            height /= img_height
             yolo_format.append(f"{label} {x_center} {y_center} {width} {height}")
         return yolo_format
 
@@ -271,3 +280,11 @@ class Dataset:
 
         for thread in threads:
             thread.join()
+
+        try:
+            os.rename(
+                os.path.join(dataset_path, "annotations"),
+                os.path.join(dataset_path, "labels"),
+            )
+        except FileNotFoundError:
+            pass
