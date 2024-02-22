@@ -44,11 +44,25 @@ def gitflow_experiment_pipeline(cfg: str) -> None:
     dataset_preparator(dataset, dataset_path)
 
     # Train the model
-    # trained_model_path = model_trainer(
-    #     ...
-    # )
+
+    model_dir_path = "./models/"
+    pre_trained_weights_path = get_pre_trained_weights_path(model_dir_path)
+
+    # comet_ml.init()
+
+    trained_model_path = model_trainer(
+        model_dir_path, dataset_path, pre_trained_weights_path, pipeline_config
+    )
 
     # Evaluate the model
-    # test_metrics_result = model_evaluator(
-    #     ...
-    # )
+    test_metrics_result = model_evaluator(
+        trained_model_path=trained_model_path,
+        dataset_path=dataset_path,
+        pipeline_config=pipeline_config,
+    )
+
+    # Validation
+    decision = model_validation(
+        metrics=test_metrics_result,
+        pipeline_config=pipeline_config,
+    )
