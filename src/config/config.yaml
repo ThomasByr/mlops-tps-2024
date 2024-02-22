@@ -7,7 +7,9 @@ model:
   imgsz : 256
 
 evaluation:
-  type: IoU,test
+  type:
+    - IoU
+    - test
 
 validation:
   threshold:

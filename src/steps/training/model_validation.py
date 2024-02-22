@@ -25,6 +25,8 @@ def model_validation(
         print(f"metric : {metric_type}")
         print(f"  value : {value}")
         print(f"  threshold : {thresh}")
-        if value <= thresh:
+        print(f"  =>", "good" if value >= thresh else "bad")
+        if value < thresh:
             found_bad_metric = True
+    print(f"decision = {not found_bad_metric}")
     return not found_bad_metric
